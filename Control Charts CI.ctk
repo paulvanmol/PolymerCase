@@ -1,0 +1,327 @@
+<Task revision="1" schemaVersion="7.3">
+   <Registration>
+      <Name>Control Charts 1.ctk</Name>
+      <Description>The Control Charts task creates Shewhart control charts for deciding whether a process is in a state of statistical control.</Description>
+      <GUID>57fd17c6-8074-495c-9581-fba69d50abf5</GUID>
+      <Procedures>SHEWHART</Procedures>
+      <Links>
+         <Link href="https://documentation.sas.com/?softwareId=STUDIOBASIC&amp;softwareVersion=01&amp;softwareContextId=tasks&amp;requestor=inapp">SAS Studio Task Reference Guide</Link>
+         <Link href=""> </Link>
+         <Link href=""> </Link>
+         <Link href="https://documentation.sas.com/?softwareId=ANMVA&amp;softwareVersion=01&amp;softwareContextId=proc_shewhart&amp;requestor=inapp">The SHEWHART Procedure</Link>
+         <Link href=""> </Link>
+         <Link href=""> </Link>
+         <Link href="http://support.sas.com/training/studio">SAS Tutorials</Link>
+      </Links>
+   </Registration>
+
+   <Metadata>  
+      <DataSources>
+         <DataSource name="dataset" where="true">
+            <Roles>
+               <Role exclude="subgroupVar,byVar,subgroupnVar" maxVars="1" minVars="1" name="processVar" type="N">Process variable:</Role>
+               <Role exclude="processVar,byVar,subgroupnVar" maxVars="1" minVars="1" name="subgroupVar" type="A">Subgroup variable:</Role>
+               <Role exclude="processVar,subgroupVar,byVar" indent="1" maxVars="1" minVars="1" name="subgroupnVar" type="N">Subgroup size variable:</Role>               
+               <Role exclude="processVar,subgroupVar,subgroupnVar" maxVars="1" minVars="0" name="byVar" type="A">Group analysis by:</Role>               
+            </Roles>
+         </DataSource>
+         <DataSource indent="1" name="limitsdata">
+         </DataSource>
+      </DataSources> 
+      
+      <Options>
+         <Option inputType="string" name="dataTab">Data</Option>
+         <Option inputType="string" name="dataGroup">Data</Option>
+         <Option defaultValue="0" indent="1" inputType="checkbox" name="sortCheck">Sort data before chart creation</Option>
+         <Option defaultValue="xrChart" inputType="combobox" name="chartCombo">Chart type:</Option>
+         <Option inputType="string" name="xrChart">Mean and range</Option>
+         <Option inputType="string" name="xsChart">Mean and standard deviation</Option>
+         <Option inputType="string" name="irChart">Individual measurement</Option>
+         <Option inputType="string" name="boxChart">Mean with box-and-whisker plot</Option>
+         <Option inputType="string" name="mrChart">Median and range</Option>
+         <Option inputType="string" name="pChart">Proportion of nonconforming items (p chart)</Option>
+         <Option inputType="string" name="npChart">Number of nonconforming items (np chart)</Option>
+         <Option inputType="string" name="cChart">Number of nonconformities (c chart)</Option>
+         <Option inputType="string" name="uChart">Number of nonconformities per unit (u chart)</Option>
+         <Option inputType="string" name="rolesGroup">Roles</Option>
+         <Option defaultValue="varselect" inputType="combobox" name="subgroupnCombo">Subgroup size:</Option>
+         <Option inputType="string" name="varselect">Subgroup size variable</Option>
+         <Option inputType="string" name="numselect" required="true">Constant subgroup size</Option>
+         <Option decimalPlaces="0" inputType="numbertext" minValue="1" name="subgroupNum" required="true" width="100px">Size of subgroups</Option>
+
+         <Option inputType="string" name="otherRolesGroup">Additional Roles</Option>          
+
+         <Option inputType="string" name="optionsTab">Options</Option>
+         <Option inputType="string" name="limitsGroup">Control Limits</Option>
+         <Option inputType="string" name="limitdatasetGroup">Limits data set</Option>
+         <Option defaultValue="computelimits" inputType="combobox" name="methodCombo">Method:</Option>
+         <Option inputType="string" name="computelimits">Compute from data</Option>
+         <Option inputType="string" name="storedlimits">Use stored limits</Option>
+         <Option defaultValue="threesigma" indent="1" inputType="combobox" name="sigmaCombo">Limits based on:</Option>
+         <Option inputType="string" name="threesigma">Three sigma</Option>
+         <Option inputType="string" name="ksigma">k sigma</Option>
+         <Option decimalPlaces="0,4" indent="1" inputType="numbertext" minValue=".0001" name="kvalue" required="true" width="50px">Multiple of standard error:</Option>
+         <Option indent="1" inputType="numbertext" maxValue="1" minValue="0" name="probvalue" required="true" width="100px">Probability level alpha:</Option>
+         <Option inputType="string" name="problevel">Probability level</Option>
+         <Option indent="1" inputType="string" name="limitsMessage">To create a stored limits table, select the Save control limits option on OUTPUT tab.</Option>
+         <Option inputType="string" name="causesGroup">Tests for Special Causes</Option>
+         <Option inputType="string" name="testsGroup">Specify Tests</Option>
+         <Option inputType="checkbox" name="test1">One point outside control limits</Option>
+         <Option inputType="checkbox" name="test2">Nine points in a row on one side of central line</Option>
+         <Option inputType="checkbox" name="test3">Six points in a row increasing/decreasing</Option>
+         <Option inputType="checkbox" name="test4">Fourteen points alternating up and down</Option>
+         <Option inputType="checkbox" name="test5">Two of three points in a row in zone A</Option>
+         <Option inputType="checkbox" name="test6">Four of five points in zone B or beyond</Option>
+         <Option inputType="checkbox" name="test7">Fifteen points in a row in zone C</Option>
+         <Option inputType="checkbox" name="test8">Eight points in a row with no points in zone C</Option>
+         <Option inputType="checkbox" name="showZones">Show zones A, B and C</Option>
+         <Option inputType="string" name="chartGroup">Chart Options</Option>
+         <Option inputType="checkbox" name="markers">Display markers for subgroup points</Option>
+         <Option inputType="checkbox" name="needles">Display vertical needles</Option>
+         
+         <Option inputType="string" name="tableGroup">Tabular Output</Option>
+         <Option inputType="checkbox" name="tableCheck">Display table of points that are out of control or violate tests</Option>
+
+         <Option inputType="string" name="outputTab">Output</Option>
+         <Option inputType="string" name="outputGroup">Output Data Sets</Option>
+         <Option inputType="checkbox" name="outhistCheck">Save summary statistics</Option>
+         <Option defaultValue="work._outhist" indent="1" inputType="outputdata" name="outhist" required="true" unique="true">Data set name:</Option>
+         <Option inputType="checkbox" name="outtableCheck">Save summary statistics and control limits</Option>
+         <Option defaultValue="work._outtable" indent="1" inputType="outputdata" name="outtable" required="true" unique="true">Data set name:</Option>         
+         <Option inputType="checkbox" name="outlimCheck">Save control limits</Option>
+         <Option defaultValue="work._outlimits" indent="1" inputType="outputdata" name="outlim" required="true" unique="true">Data set name:</Option>
+      </Options>
+      
+   </Metadata>
+
+   <UI>
+      <Container option="dataTab">
+         <Group open="true" option="dataGroup">
+            <DataItem data="dataset"/> 
+            <OptionItem option="sortCheck"/>
+         </Group>
+
+         <Group open="true" option="rolesGroup">
+            <RoleItem role="processVar"/>
+            <RoleItem role="subgroupVar"/>
+            <OptionChoice option="chartCombo">
+               <OptionItem option="xrChart"/>
+               <OptionItem option="xsChart"/>
+               <OptionItem option="boxChart"/>               
+               <OptionItem option="irChart"/>
+               <OptionItem option="mrChart"/>
+               <OptionItem option="pChart"/>
+               <OptionItem option="npChart"/>
+               <OptionItem option="cChart"/>
+               <OptionItem option="uChart"/>            
+            </OptionChoice>             
+            <OptionChoice option="subgroupnCombo">
+               <OptionItem option="varselect"/>
+               <OptionItem option="numselect"/>
+            </OptionChoice>
+            <RoleItem role="subgroupnVar"/>
+            <OptionItem option="subgroupNum"/>
+         </Group>
+         <Group option="otherRolesGroup">
+            <RoleItem role="byVar"/>
+         </Group>
+      </Container>
+      
+      <Container option="optionsTab">
+         <Group open="true" option="limitsGroup">
+            <OptionChoice option="methodCombo">
+               <OptionItem option="computelimits"/>
+               <OptionItem option="specifylimits"/>
+               <OptionItem option="storedlimits"/>
+            </OptionChoice>            
+            <OptionChoice option="sigmaCombo">
+               <OptionItem option="threesigma"/>
+               <OptionItem option="ksigma"/>
+               <OptionItem option="problevel"/>
+            </OptionChoice>            
+            <OptionItem option="kvalue"/>
+            <OptionItem option="probvalue"/>
+            <DataItem data="limitsdata"/>
+            <OptionItem option="limitsMessage"/>
+         </Group>
+         <Group option="causesGroup">
+            <Group open="true" option="testsGroup">
+               <OptionItem option="test1"/>
+               <OptionItem option="test2"/>
+               <OptionItem option="test3"/>
+               <OptionItem option="test4"/>
+               <OptionItem option="test5"/>
+               <OptionItem option="test6"/>
+               <OptionItem option="test7"/>
+               <OptionItem option="test8"/>          
+
+            </Group>
+            <OptionItem option="showZones"/>
+         </Group>
+         <Group option="chartGroup">
+            <OptionItem option="markers"/>
+            <OptionItem option="needles"/>
+         </Group>
+         <Group option="tableGroup">
+            <OptionItem option="tableCheck"/>
+         </Group>         
+      </Container> 
+      
+      <Container option="outputTab">
+         <Group open="true" option="outputGroup">
+            <OptionItem option="outhistCheck"/>
+            <OptionItem option="outhist"/>
+            <OptionItem option="outlimCheck"/>
+            <OptionItem option="outlim"/>            
+            <OptionItem option="outtableCheck"/>
+            <OptionItem option="outtable"/>            
+         </Group>
+      </Container> 
+
+   </UI>
+
+   <Dependencies>
+      <Dependency condition="($chartCombo == 'pChart' || $chartCombo == 'npChart' || $chartCombo == 'cChart' || $chartCombo == 'uChart')">
+         <Target action="show" conditionResult="true" option="subgroupnCombo"/>
+         <Target action="hide" conditionResult="false" option="subgroupnCombo"/>
+         <Target action="hide" conditionResult="false" option="subgroupNum"/>
+         <Target action="hide" conditionResult="false" option="subgroupnVar"/>
+      </Dependency> 
+      <Dependency condition="$chartCombo == 'boxChart'">
+         <Target action="hide" conditionResult="true" option="chartGroup"/>
+         <Target action="show" conditionResult="false" option="chartGroup"/>
+      </Dependency>
+      <Dependency condition="(($subgroupnCombo) &amp;&amp; ($subgroupnCombo == 'varselect'))">
+         <Target action="show" conditionResult="true" option="subgroupnVar"/>
+         <Target action="hide" conditionResult="true" option="subgroupNum"/>         
+      </Dependency>
+      <Dependency condition="(($subgroupnCombo) &amp;&amp; ($subgroupnCombo == 'numselect'))">
+         <Target action="hide" conditionResult="true" option="subgroupnVar"/>
+         <Target action="show" conditionResult="true" option="subgroupNum"/>        
+      </Dependency>
+      <Dependency condition="($methodCombo == 'computelimits')">
+         <Target action="show" conditionResult="true" option="sigmaCombo"/>
+         <Target action="hide" conditionResult="true" option="limitsdata"/>
+         <Target action="hide" conditionResult="true" option="limitsMessage"/>
+      </Dependency>
+      <Dependency condition="($methodCombo == 'storedlimits')">
+         <Target action="hide" conditionResult="true" option="sigmaCombo"/>
+         <Target action="hide" conditionResult="true" option="kvalue"/>
+         <Target action="hide" conditionResult="true" option="probvalue"/>
+         <Target action="show" conditionResult="true" option="limitsdata"/>
+         <Target action="show" conditionResult="true" option="limitsMessage"/>
+      </Dependency>
+      
+      <Dependency condition="($sigmaCombo == 'threesigma')">
+         <Target action="hide" conditionResult="true" option="kvalue"/>
+         <Target action="hide" conditionResult="true" option="probvalue"/>
+      </Dependency>
+      <Dependency condition="($sigmaCombo == 'ksigma')">
+         <Target action="show" conditionResult="true" option="kvalue"/>
+         <Target action="hide" conditionResult="true" option="probvalue"/>
+      </Dependency>
+      <Dependency condition="($sigmaCombo == 'problevel')">
+         <Target action="hide" conditionResult="true" option="kvalue"/>
+         <Target action="show" conditionResult="true" option="probvalue"/>
+      </Dependency>
+      <Dependency condition="($outhistCheck == '1')">
+         <Target action="enable" conditionResult="true" option="outhist"/>
+         <Target action="disable" conditionResult="false" option="outhist"/>
+      </Dependency>
+      <Dependency condition="($outlimCheck == '1')">
+         <Target action="enable" conditionResult="true" option="outlim"/>
+         <Target action="disable" conditionResult="false" option="outlim"/>
+      </Dependency>
+      <Dependency condition="($outtableCheck == '1')">
+         <Target action="enable" conditionResult="true" option="outtable"/>
+         <Target action="disable" conditionResult="false" option="outtable"/>
+      </Dependency>
+            <Dependency condition="(($methodCombo=='computelimits' &amp;&amp; $sigmaCombo == 'threesigma') ||          ($kvalue=='3' &amp;&amp; $sigmaCombo=='ksigma' &amp;&amp; $methodCombo=='computelimits' ))">
+         <Target action="show" conditionResult="true" option="causesGroup"/>
+         <Target action="hide" conditionResult="false" option="causesGroup"/>        
+      </Dependency>
+   </Dependencies>
+
+   <CodeTemplate>
+<![CDATA[
+
+ods noproctitle;
+ods graphics / imagemap=on;
+#if($byVar.size() > 0 || $sortCheck == 1)
+   proc sort data=$dataset out=_shewhartSorted;
+   by
+   #if($byVar.size() > 0)
+      #foreach($item in $byVar) $item #end
+   #end
+   #foreach($item in $subgroupVar) $item #end;
+   #if ($dataset.getWhereClause() != '')
+      where $dataset.getWhereClause();
+   #end
+   run;
+proc shewhart data=_shewhartSorted
+#else proc shewhart data=$dataset
+#end
+
+
+#if ($methodCombo == 'storedlimits') limits=$limitsdata #end 
+;
+#if($byVar.size() == 0 && $sortCheck == 0 && $dataset.getWhereClause() != '')
+where $dataset.getWhereClause();
+#end 
+#if($chartCombo == 'xrChart') xrchart 
+   #elseif($chartCombo == 'xsChart') xschart
+   #elseif($chartCombo == 'irChart') irchart
+   #elseif($chartCombo == 'boxChart') boxchart
+   #elseif($chartCombo == 'mrChart') mrchart
+   #elseif($chartCombo == 'pChart') pchart
+   #elseif($chartCombo == 'npChart') npchart
+   #elseif($chartCombo == 'cChart') cchart
+   #else uchart
+#end
+   #foreach($item in $processVar) $item #end * #foreach($item in $subgroupVar) $item #end 
+   /
+   #if($subgroupnCombo) subgroupn=
+      #if($subgroupnCombo == 'varselect') #foreach($item in $subgroupnVar) $item #end 
+      #else $subgroupNum 
+      #end
+   #end
+   #if($sigmaCombo == 'ksigma') sigmas=$kvalue #end
+   #if($sigmaCombo == 'problevel') alpha=$probvalue #end   
+   #if($showZones == 1) zones zonelabels
+      #if($chartCombo=='xrChart' || $chartCombo=='xsChart' || $chartCombo=='mrChart') zones2 #end
+   #end
+   #if($outhistCheck == '1') outhistory=$outhist #end
+   #if($outlimCheck == '1') outlimits=$outlim #end
+   #if($outtableCheck == '1') outtable=$outtable #end   
+   #if(($test1=='1') || ($test2=='1') || ($test3=='1') || ($test4=='1') || ($test5=='1') || ($test6=='1') || ($test7=='1') || ($test8=='1'))
+      tests=
+      #if($test1 == '1') 1 #end
+      #if($test2 == '1') 2 #end
+      #if($test3 == '1') 3 #end
+      #if($test4 == '1') 4 #end
+      #if($test5 == '1') 5 #end
+      #if($test6 == '1') 6 #end
+      #if($test7 == '1') 7 #end
+      #if($test8 == '1') 8 #end      
+   #end
+   #if($tableCheck == 1) tablelegend(exceptions) #end
+   #if($markers == 1) markers #end
+   #if($needles == 1) needles #end
+
+   ;
+#if($byVar.size() > 0) by #foreach($item in $byVar) $item #end;#end
+run;
+
+#if($byVar.size() > 0 || $sortCheck == 1)
+proc delete data=_shewhartSorted;
+run;
+#end
+]]>
+   </CodeTemplate>
+<TemplateValues version="7.3">
+<![CDATA[
+{"dataset":{"librarytable":"WORK.POLYMERDATA"},"processVar":"json:[{\"value\":\"CI\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST.\",\"informat\":\"\",\"className\":\"RoleObject\"}]","subgroupVar":"json:[{\"value\":\"Batch_Number\",\"type\":\"Numeric\",\"length\":8,\"format\":\"BEST.\",\"informat\":\"\",\"className\":\"RoleObject\"}]","subgroupnVar":"","byVar":"","limitsdata":{"librarytable":""},"sortCheck":"0","chartCombo":[{"value":"irChart","displayValue":"Individual measurement","keys":["irChart",null,"Individual measurement"],"label":"Individual measurement","baseid":"{\"value\":\"irChart\",\"label\":\"Individual measurement\"}","id":"{\"value\":\"irChart\",\"label\":\"Individual measurement\"}1"}],"subgroupnCombo":[{"value":"varselect","displayValue":"Subgroup size variable","keys":["varselect",null,"Subgroup size variable"],"label":"Subgroup size variable","baseid":"{\"value\":\"varselect\",\"label\":\"Subgroup size variable\"}","id":"{\"value\":\"varselect\",\"label\":\"Subgroup size variable\"}1"}],"subgroupNum":"","methodCombo":[{"value":"computelimits","displayValue":"Compute from data","keys":["computelimits",null,"Compute from data"],"label":"Compute from data","baseid":"{\"value\":\"computelimits\",\"label\":\"Compute from data\"}","id":"{\"value\":\"computelimits\",\"label\":\"Compute from data\"}1"}],"sigmaCombo":[{"value":"threesigma","displayValue":"Three sigma","keys":["threesigma",null,"Three sigma"],"label":"Three sigma","baseid":"{\"value\":\"threesigma\",\"label\":\"Three sigma\"}","id":"{\"value\":\"threesigma\",\"label\":\"Three sigma\"}1"}],"kvalue":"","probvalue":"","test1":"1","test2":"0","test3":"0","test4":"0","test5":"0","test6":"0","test7":"0","test8":"0","showZones":"1","markers":"0","needles":"1","tableCheck":"0","outhistCheck":"0","outhist":{"value":"work._outhist0001","cbSelected":false},"outtableCheck":"0","outtable":{"value":"work._outtable0001","cbSelected":false},"outlimCheck":"0","outlim":{"value":"work._outlimits0001","cbSelected":false}}
+]]>
+</TemplateValues>
+
+</Task>
